@@ -1,0 +1,121 @@
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var elements = document.querySelectorAll(".eu_co.rsn");
+        var currentUrl = window.location.href;
+        var encodedUrl = encodeURIComponent(currentUrl);
+
+        if (elements.length === 0) {
+            console.log("No elements found with the specified selector.");
+            return;
+        }
+
+        function detectLanguage() {
+            var lang = navigator.language || navigator.userLanguage;
+            var languageMap = {
+                'de': 'de',
+                'fr': 'fr',
+                'pt': 'pt',
+                'zh': 'zh',
+                'ru': 'ru',
+                'es': 'es'
+            };
+            var shortLang = lang.substring(0, 2).toLowerCase();
+            return languageMap[shortLang] || 'en'; // fall back to english
+        }
+
+        var language = detectLanguage();
+        var messages = {
+            en: {
+                header: `Access to <p>${currentUrl}<p> is blocked due to Company Risk policy`,
+                reason: "If you need to access this site for business-critical reasons, please request a security risk exception.",
+                contact: "Contact the IT Service Desk",
+                button: "Click here to raise a support case"
+            },
+            de: {
+                header: `Zugriff auf <p>${currentUrl}</p> is aufgrund der Unternehmensrichtlinien blockiert`,
+                reason: "Wenn Sie aus geschäftskritischen Gründen auf diese Seite zugreifen müssen, beantragen Sie bitte eine Sicherheitsrisikoausnahme.",
+                contact: "Kontaktieren Sie den IT-Service-Desk",
+                button: "Klicken Sie hier, um einen Supportfall zu erstellen"
+            },
+            fr: {
+                header: `Accès à <p>${currentUrl}</p> bloqué en raison de la politique de risque de l'entreprise`,
+                reason: "Si vous devez accéder à ce site pour des raisons essentielles à l'entreprise, veuillez demander une dérogation pour risque de sécurité.",
+                contact: "Contactez le service d'assistance informatique",
+                button: "Cliquez ici pour créer un ticket de support"
+            },
+            pt: {
+                header: `Acesso a <p> ${currentUrl}</p> bloqueado devido à política de risco da empresa`,
+                reason: "Se precisar de aceder a este site por motivos críticos para o negócio, por favor, solicite uma exceção de risco de segurança.",
+                contact: "Contacte o Serviço de Atendimento de TI",
+                button: "Clique aqui para abrir um caso de suporte"
+            },
+            zh: {
+                header: `因公司风险政策被阻止访问 <p>${currentUrl}</p>`,
+                reason: "如果您因业务需要访问此网站，请申请安全风险例外。",
+                contact: "联系IT服务台",
+                button: "点击这里提交支持请求"
+            },
+            ru: {
+                header: `Доступ к y<p>${currentUrl}</p> заблокирован из-за политики компании по управлению рисками`,
+                reason: "Если вам необходимо получить доступ к этому сайту по критически важным для бизнеса причинам, пожалуйста, запросите исключение по риску безопасности.",
+                contact: "Свяжитесь с IT-службой",
+                button: "Нажмите здесь, чтобы создать заявку в службу поддержки"
+            },
+            es: {
+                header: `Acceso a <p>${currentUrl}</p> bloqueado debido a la política de riesgos de la empresa`,
+                reason: "Si necesita acceder a este sitio por razones críticas para el negocio, solicite una excepción de riesgo de seguridad.",
+                contact: "Contacte con el servicio de asistencia técnica",
+                button: "Haga clic aquí para levantar un caso de soporte"
+            }
+        };
+
+        elements.forEach(function(element) {
+            var innerText = element.innerText.toLowerCase();
+            var updatedText = '';
+            var currentTime = new Date().toISOString();
+
+            console.log("Processing element text:", innerText);
+
+            if (innerText.includes('enterprise')) {
+                updatedText = "Collaboration_Online_Meetings";
+            } else if (innerText.includes('consumer')) {
+                updatedText = "Consumer";
+            } else if (innerText.includes('ai/ml')) {
+                updatedText = "AI_ML_Tools";
+            } else if (innerText.includes('finance')) {
+                updatedText = "finance";
+            } else if (innerText.includes('health')) {
+                updatedText = "health_care";
+            }
+
+            if (updatedText) {
+                document.body.innerHTML = '';
+                var blockPage = document.createElement('div');
+                blockPage.style.display = 'flex';
+                blockPage.style.flexDirection = 'column';
+                blockPage.style.justifyContent = 'center';
+                blockPage.style.alignItems = 'center';
+                blockPage.style.height = '100vh';
+                blockPage.style.backgroundColor = '#fd4239';
+                blockPage.style.fontFamily = 'Arial, sans-serif';
+                blockPage.style.fontSize = '2.5em';
+                blockPage.innerHTML = `
+                    <div style="text-align: center; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px;">
+                        <h1 style="color: #ff0000;">${messages[language].header}</h1>
+                        <p>${messages[language].reason}</p>
+                        <p>${messages[language].contact}</p>
+                        
+                        <a id="replacetxt" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">${messages[language].button}</a>
+                    </div>
+                `;
+                document.body.appendChild(blockPage);
+
+                var linkElement = document.getElementById('replacetxt');
+                linkElement.href = "https://zscaler.com/?type=" + encodeURIComponent(updatedText) + "&time=" + encodeURIComponent(currentTime) + "&source=" + encodeURIComponent(currentUrl);
+            } else {
+                console.log("No matching text found in element:", innerText);
+            }
+        });
+    });
+</script>
